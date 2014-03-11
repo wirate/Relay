@@ -32,7 +32,7 @@ class Relay_Adapter_LowSocket implements Relay_Adapter_Interface
     protected $_domain;
 
     /**
-     * Socket type.
+     * Communication type. (stream, datagram, seqpacket etc)
      *
      * @var int
      */
