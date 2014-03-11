@@ -24,6 +24,13 @@
 interface Relay_Adapter_Interface
 {
     /**
+     * Opens a stream that is not connected.
+     *
+     * @return void
+     */
+    public function open();
+
+    /**
      * Establish connection
      *
      * @param string $host
@@ -67,7 +74,14 @@ interface Relay_Adapter_Interface
     public function read($bytes = 1024);
 
     /**
-     * Close connection
+     * Disconnect from end-point.
+     *
+     * @return bool
      */
     public function disconnect();
+
+    /**
+     * Close the stream.
+     */
+    public function close();
 }

@@ -67,6 +67,20 @@ class Relay_Adapter_LowSocket implements Relay_Adapter_Interface
         $this->_protocol = $protocol;
     }
 
+    public function open()
+    {
+        $this->close();
+
+        $resource = socket_create($this->_domain, $this->_type, $this->_protocol);
+
+        if ($resource === false) {
+            require_once 'Relay/Adapter/Exception.php';
+            throw new Relay_Adapter_Exception(socket_strerror(socket_last_error()));
+        }
+
+        $this->_resource = $resource;
+    }
+
     /**
      * Establish connection
      *
@@ -75,16 +89,12 @@ class Relay_Adapter_LowSocket implements Relay_Adapter_Interface
      */
     public function connect($host, $port)
     {
+        if (!$this->isOpen()) {
+            throw new Relay_Adapter_Exception("Socket is not open");
+        }
+
         // disconnect first.
         $this->disconnect();
-
-        // Create a socket.
-        $resource = socket_create($this->_domain, $this->_type, $this->_protocol);
-
-        if ($resource === false) {
-            require_once 'Relay/Adapter/Exception.php';
-            throw new Relay_Adapter_Exception(socket_strerror(socket_last_error()));
-        }
 
         if (socket_connect($resource, $host, $port) === false) {
             $message = socket_strerror(socket_last_error());
@@ -140,6 +150,11 @@ class Relay_Adapter_LowSocket implements Relay_Adapter_Interface
 
     public function disconnect()
     {
+        return @socket_shutdown($this->_resource, 2);
+    }
+
+    public function close()
+    {
         if ($this->_resource !== null) {
             socket_close($this->_resource);
             $this->_resource = null;
@@ -148,6 +163,6 @@ class Relay_Adapter_LowSocket implements Relay_Adapter_Interface
 
     public function __destruct()
     {
-        $this->disconnect();
+        $this->close();
     }
 }

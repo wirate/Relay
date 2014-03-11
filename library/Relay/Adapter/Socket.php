@@ -43,9 +43,17 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
 
     /**
      * Socket Resource
-     * @var resource|null
+     * @var resource|bool
      */
-    protected $_resource = null;
+    protected $_resource = false;
+
+    /**
+     * Open the socket
+     */
+    public function open()
+    {
+        $this->_resource = true;
+    }
 
     /**
      * Create and connect socket.
@@ -56,6 +64,10 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
      */
     public function connect($host, $port, $protocol = self::TCP)
     {
+        if (!$this->isOpen()) {
+            throw new Relay_Adapter_Exception("Socket is not open");
+        }
+
         // Make sure we are disconnected.
         $this->disconnect();
 
@@ -79,12 +91,12 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
 
     public function isConnected()
     {
-        return $this->_resource && !feof($this->_resource);
+        return is_resource($this->_resource) && !feof($this->_resource);
     }
 
     public function isOpen()
     {
-        return is_resource($this->_resource);
+        return $this->_resource !== false;
     }
 
     /**
@@ -122,14 +134,20 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
     }
 
     /**
-     * Close socket.
-     * @return Void
+     * Disconnect from end-point.
+     *
+     * @return bool
      */
     public function disconnect()
     {
-        if ($this->_resource !== null) {
+        return @stream_socket_shutdown($this->_resource, STREAM_SHUT_RDWR);
+    }
+
+    public function close()
+    {
+        if (is_resource($this->_resource)) {
             @fclose($this->_resource);
-            $this->_resource = null;
+            $this->_resource = false;
         }
     }
 
@@ -139,6 +157,6 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
      */
     public function __destruct()
     {
-        $this->disconnect();
+        $this->close();
     }
 }
