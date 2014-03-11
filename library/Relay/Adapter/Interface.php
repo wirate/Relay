@@ -32,6 +32,27 @@ interface Relay_Adapter_Interface
     public function connect($host, $port);
 
     /**
+     * Check if a connection is established.
+     * Note that some adapters may only be able to tell if a connection
+     * is lost when trying to read from the stream.
+     * So you can only rely on this method to test if a stream is disconnected.
+     *
+     * @return bool
+     */
+    public function isConnected();
+
+    /**
+     * Returns true if the stream is connected on this end.
+     * Note that this does not mean a connection is made.
+     * there are for example connectionless protocols.
+     * This will only tell you that the stream is open, and may or may
+     * not be connected to an endpoint.
+     *
+     * @return bool
+     */
+    public function isOpen();
+
+    /**
      * Write to stream
      *
      * @param $data the data to write

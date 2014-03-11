@@ -77,6 +77,16 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
         $this->_resource = $resource;
     }
 
+    public function isConnected()
+    {
+        return $this->_resource && !feof($this->_resource);
+    }
+
+    public function isOpen()
+    {
+        return is_resource($this->_resource);
+    }
+
     /**
      * Write data to stream
      *
@@ -102,7 +112,7 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
             return;
         }
 
-        if (feof($stream[0])) {
+        if (feof($this->_resource)) {
             $this->disconnect();
             require_once 'Relay/Adapter/Exception.php';
             throw new Relay_Adapter_Exception("EOF reached: Connection lost");

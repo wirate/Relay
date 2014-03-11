@@ -101,6 +101,17 @@ class Relay_Adapter_LowSocket implements Relay_Adapter_Interface
         $this->_resource = $resource;
     }
 
+    public function isConnected()
+    {
+        // Just check if we have the socket open for now.
+        return $this->isOpen();
+    }
+
+    public function isOpen()
+    {
+        return is_resource($this->_resource);
+    }
+
     public function write($data)
     {
         return @socket_write($this->_resource, $data);
