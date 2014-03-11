@@ -64,12 +64,12 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
      */
     public function connect($host, $port, $protocol = self::TCP)
     {
-        if (!$this->isOpen()) {
-            throw new Relay_Adapter_Exception("Socket is not open");
+        if ($this->isOpen()) {
+            // disconnect first.
+            $this->disconnect();
+        } else {
+            $this->open();
         }
-
-        // Make sure we are disconnected.
-        $this->disconnect();
 
         $resource = @stream_socket_client("$protocol://$host:$port",
             $errno, $errstr, 30, STREAM_CLIENT_CONNECT);

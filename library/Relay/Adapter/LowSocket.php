@@ -89,12 +89,12 @@ class Relay_Adapter_LowSocket implements Relay_Adapter_Interface
      */
     public function connect($host, $port)
     {
-        if (!$this->isOpen()) {
-            throw new Relay_Adapter_Exception("Socket is not open");
+        if ($this->isOpen()) {
+            // disconnect first.
+            $this->disconnect();
+        } else {
+            $this->open();
         }
-
-        // disconnect first.
-        $this->disconnect();
 
         if (socket_connect($resource, $host, $port) === false) {
             $message = socket_strerror(socket_last_error());
@@ -107,8 +107,6 @@ class Relay_Adapter_LowSocket implements Relay_Adapter_Interface
             require_once 'Relay/Adapter/Exception.php';
             throw new Relay_Adapter_Exception("Failed to set block mode: " . $message);
         }
-
-        $this->_resource = $resource;
     }
 
     public function isConnected()
