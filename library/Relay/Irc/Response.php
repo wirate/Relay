@@ -211,4 +211,28 @@ class Relay_Irc_Response extends Relay_Irc_Message
 
         return preg_match('/^[0-9]{1,3}$|^[A-z]+$/', $command) === 1;
     }
+
+    /**
+     * Returns true if this message is a error massage
+     *
+     * @return boolean
+     */
+    public function isError()
+    {
+    	if (ctype_digit($this->command)) {
+            $code = (int) $this->command;
+            return $code > 400;
+    	}
+    	return false;
+    }
+
+    /**
+     * Returns true if this message is a handshake message
+     *
+     * @return boolean
+     */
+    public function isHandshake()
+    {
+        return $this->getCommandName() === 'RPL_WELCOME';
+    }
 }
