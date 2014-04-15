@@ -71,14 +71,15 @@ class Relay_Adapter_LowSocket implements Relay_Adapter_Interface
 
     public function open()
     {
-        $this->close();
-
         $resource = socket_create($this->_domain, $this->_type, $this->_protocol);
 
         if ($resource === false) {
             require_once 'Relay/Adapter/Exception.php';
             throw new Relay_Adapter_Exception(socket_strerror(socket_last_error()));
         }
+
+        // Close first before assign.
+        $this->close();
 
         $this->_resource = $resource;
     }
