@@ -49,6 +49,43 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
     protected $_resource = false;
 
     /**
+     * Protocol to use.
+     *
+     * @var string
+     */
+    protected $_protocol = '';
+
+    /**
+     * Set protocol to use.
+     *
+     * @param string $protocol
+     */
+    public function setProtocol($protocol)
+    {
+        $this->_protocol = (string) $protocol;
+    }
+
+    /**
+     * Get protocol
+     *
+     * @return string
+     */
+    public function getProtocol()
+    {
+        return $this->_protocol;
+    }
+
+    /**
+     * Default is a TCP socket.
+     *
+     * @param string $protocol
+     */
+    public function __construct($protocol = self::TCP)
+    {
+        $this->setProtocol($protocol);
+    }
+
+    /**
      * Open the socket
      */
     public function open()
@@ -64,7 +101,7 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
      * @param Int $port
      * @param String $protocol
      */
-    public function connect($host, $port, $protocol = self::TCP)
+    public function connect($host, $port)
     {
         if ($this->isOpen()) {
             // disconnect first.
@@ -73,7 +110,7 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
             $this->open();
         }
 
-        $resource = @stream_socket_client("$protocol://$host:$port",
+        $resource = @stream_socket_client("{$this->_protocol}://$host:$port",
             $errno, $errstr, 30, STREAM_CLIENT_CONNECT);
 
         if ($resource === false) {
