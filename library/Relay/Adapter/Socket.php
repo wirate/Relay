@@ -43,7 +43,8 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
 
     /**
      * Socket Resource
-     * @var resource|bool
+     *
+     * @var resource
      */
     protected $_resource = false;
 
@@ -114,7 +115,7 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
      * Read data from stream.
      * 
      * @param int $bytes [optional]
-     * @return (String) Data read from socket or (bool) false if no data was read.
+     * @return (string) Data read from socket or (bool) false if no data was read.
      */
     public function read($bytes = 1024)
     {
@@ -124,7 +125,7 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
             return false;
         }
 
-        if (feof($this->_resource)) {
+        if (@feof($this->_resource)) {
             $this->disconnect();
             require_once 'Relay/Adapter/Exception.php';
             throw new Relay_Adapter_Exception("EOF reached: Connection lost");
