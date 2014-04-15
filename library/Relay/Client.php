@@ -59,10 +59,14 @@ class Relay_Client
 
     public function __construct(array $config = null)
     {
-        $this->adapter = new Relay_Adapter_Socket;
+        $this->adapter = new Relay_Adapter_Socket();
 
         if ($config !== null) {
             $this->setConfig($config);
+        }
+
+        if ($this->config['use_ssl']) {
+            $this->adapter->setProtocol(Relay_Adapter_Socket::SSL);
         }
     }
 
@@ -86,7 +90,7 @@ class Relay_Client
     {
         $conf = $this->config;
 
-        $this->adapter->connect($conf['ip'], $conf['port'], ($conf['use_ssl']) ? 'ssl' : 'tcp');
+        $this->adapter->connect($conf['ip'], $conf['port']);
 
         if (strlen($conf['password'])) {
             $msg = new Relay_Irc_Message('PASS');
@@ -125,6 +129,7 @@ class Relay_Client
             $response = $this->adapter->read(512);
         } catch (Exception $e) {
             if ($this->config['reconnect']) {
+                echo "Reconnect attempt: " . $this->config['reconnect'];
                 $this->connect();
                 return;
             }
