@@ -149,8 +149,8 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
     {
         if (is_resource($this->_resource)) {
             @fclose($this->_resource);
-            $this->_resource = false;
         }
+        $this->_resource = false;
     }
 
     /**
