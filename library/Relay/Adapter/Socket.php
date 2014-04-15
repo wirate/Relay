@@ -53,6 +53,7 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
      */
     public function open()
     {
+        $this->close();
         $this->_resource = true;
     }
 
