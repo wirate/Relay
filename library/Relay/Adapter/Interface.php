@@ -31,10 +31,22 @@ interface Relay_Adapter_Interface
     public function open();
 
     /**
+     * Returns true if the stream is connected on this end.
+     * Note that this does not mean a connection is made.
+     * there are for example connectionless protocols.
+     * This will only tell you that the stream is open, and may or may
+     * not be connected to an endpoint.
+     *
+     * @return bool
+     */
+    public function isOpen();
+
+    /**
      * Establish connection
      *
-     * @param string $host
-     * @param int    $port
+     * @param   string $host
+     * @param   int    $port
+     * @return  void
      */
     public function connect($host, $port);
 
@@ -49,27 +61,18 @@ interface Relay_Adapter_Interface
     public function isConnected();
 
     /**
-     * Returns true if the stream is connected on this end.
-     * Note that this does not mean a connection is made.
-     * there are for example connectionless protocols.
-     * This will only tell you that the stream is open, and may or may
-     * not be connected to an endpoint.
-     *
-     * @return bool
-     */
-    public function isOpen();
-
-    /**
      * Write to stream
      *
      * @param $data the data to write
+     * @return (bool) true on success, false on failure.
      */
     public function write($data);
 
     /**
      * Read from stream
      *
-     * @param int $bytes max numbers of bytes to recive
+     * @param int $bytes [optional] max numbers of bytes to recive
+     * @return (string) Data read from socket or (bool) false if no data was read.
      */
     public function read($bytes = 1024);
 
@@ -82,6 +85,8 @@ interface Relay_Adapter_Interface
 
     /**
      * Close the stream.
+     *
+     * @return void
      */
     public function close();
 }
