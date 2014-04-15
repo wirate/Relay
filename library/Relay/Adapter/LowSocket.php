@@ -99,13 +99,13 @@ class Relay_Adapter_LowSocket implements Relay_Adapter_Interface
             $this->open();
         }
 
-        if (socket_connect($resource, $host, $port) === false) {
+        if (@socket_connect($this->_resource, $host, $port) === false) {
             $message = socket_strerror(socket_last_error());
             require_once 'Relay/Adapter/Exception.php';
             throw new Relay_Adapter_Exception('Socket connection failed: ' . $message);
         }
 
-        if (!socket_set_nonblock($resource)) {
+        if (@socket_set_nonblock($this->_resource) === false) {
             $message = socket_strerror(socket_last_error());
             require_once 'Relay/Adapter/Exception.php';
             throw new Relay_Adapter_Exception("Failed to set block mode: " . $message);
