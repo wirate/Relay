@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+require_once 'internal/socket_fgets.php';
+
 /**
  * @see Relay_Adapter_Interface
  */
@@ -128,7 +130,7 @@ class Relay_Adapter_LowSocket implements Relay_Adapter_Interface
     public function read($bytes = 1024)
     {
         $sock = array($this->_resource);
-        $s = socket_select($sock, $n = null, $n = null, 300);
+        $s = socket_select($sock, $n = null, $n = null, 3);
 
         if ($s === false) {
             $this->disconnect();
@@ -137,13 +139,7 @@ class Relay_Adapter_LowSocket implements Relay_Adapter_Interface
             throw new Relay_Adapter_Exception('Socket select error: ' . $message);
         }
 
-        if (socket_recv($sock[0], $buffer, $bytes, 0) === 0) {
-            $this->disconnect();
-            require_once 'Relay/Adapter/Exception.php';
-            throw new Relay_Adapter_Exception('Socket disconnected: ' . $message);
-        }
-
-        return $buffer;
+        return socket_fgets($this->_resource, $bytes);
     }
 
     public function disconnect()
