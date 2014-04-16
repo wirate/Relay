@@ -319,7 +319,7 @@ class Relay_Irc_Message
         $p = 0;
 
         if (isset($str[0]) === false) {
-            return;
+            return $this;
         }
 
         // Prefix first.
@@ -374,6 +374,8 @@ class Relay_Irc_Message
             $trail .= $str[$p];
         }
         $this->setTrail($trail);
+
+        return $this;
     }
 
     /**
