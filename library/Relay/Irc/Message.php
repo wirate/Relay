@@ -318,6 +318,10 @@ class Relay_Irc_Message
         $str = rtrim($str);
         $p = 0;
 
+        if (isset($str[0]) === false) {
+            return;
+        }
+
         // Prefix first.
         $prefix = '';
         if ($str[0] === self::PREFIX) {
