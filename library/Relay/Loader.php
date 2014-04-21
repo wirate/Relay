@@ -79,7 +79,7 @@ class Relay_Loader
     /**
      * Returns true if autoload is enabled for this loader. false otherwise.
      *
-     * @return type
+     * @return boolean
      */
     public function isAutoloadEnabled()
     {
@@ -162,6 +162,7 @@ class Relay_Loader
      */
     public function loadClass($class)
     {
+        // early exit if class is loaded.
         if (self::isLoaded($class)) {
             return;
         }
@@ -169,13 +170,13 @@ class Relay_Loader
         $filename = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
         if ($this->loadFile($filename) === false) {
             require_once 'Relay/Exception.php';
-            throw new Relay_Exception("Filename '$filename' was not found.");
+            throw new Relay_Exception("File '$filename' was not found.");
         }
 
-        // Check if class now after include.
+        // Check if class exists now after include.
         if (!self::isLoaded($class)) {
             require_once 'Relay/Exception.php';
-            throw new Relay_Exception("class '$class' was not found");
+            throw new Relay_Exception("Class '$class' was not found");
         }
     }
 

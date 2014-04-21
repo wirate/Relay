@@ -389,4 +389,3 @@ class Relay_Irc_Message
         return $this->getMessage();
     }
 }
-
