@@ -143,6 +143,17 @@ class Relay_Loader
     }
 
     /**
+     * Check if a class or inteface is loaded.
+     *
+     * @param string $class
+     * @return bool
+     */
+    public static function isLoaded($class)
+    {
+        return class_exists($class, false) || interface_exists($class, false);
+    }
+
+    /**
      * Load a class
      *
      * @param string $class     Name of the class.
@@ -151,7 +162,7 @@ class Relay_Loader
      */
     public function loadClass($class)
     {
-        if (class_exists($class, false) || interface_exists($class, false)) {
+        if (self::isLoaded($class)) {
             return;
         }
 
@@ -162,7 +173,7 @@ class Relay_Loader
         }
 
         // Check if class now after include.
-        if (!class_exists($class, false) && !interface_exists($class, false)) {
+        if (!self::isLoaded($class)) {
             require_once 'Relay/Exception.php';
             throw new Relay_Exception("class '$class' was not found");
         }
