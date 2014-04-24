@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-// get queue from preaxbot
+// get queue
 $queue = msg_get_queue(ftok('./init.php', 'r'));
 
 unset($argv[0]);
