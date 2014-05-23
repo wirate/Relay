@@ -23,7 +23,7 @@
 require_once 'Relay/Adapter/Interface.php';
 
 /**
- * Relay_Network_Socket
+ * Relay_Adapter_Socket
  * basic non-blocking socket connection. Wrapps PHP's Stream/File functions
  *
  * @see http://docs.php.net/manual/en/function.stream-socket-client.php
@@ -95,6 +95,16 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
     }
 
     /**
+     * Is the socket open?
+     *
+     * @return bool
+     */
+    public function isOpen()
+    {
+        return $this->_resource !== false;
+    }
+
+    /**
      * Create and connect socket.
      *
      * @param String $host
@@ -128,14 +138,14 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
         $this->_resource = $resource;
     }
 
+    /**
+     * Is the socket connected?
+     *
+     * @return bool
+     */
     public function isConnected()
     {
         return is_resource($this->_resource) && !feof($this->_resource);
-    }
-
-    public function isOpen()
-    {
-        return $this->_resource !== false;
     }
 
     /**
@@ -182,6 +192,11 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
         return @stream_socket_shutdown($this->_resource, STREAM_SHUT_RDWR);
     }
 
+    /**
+     * Close the socket
+     *
+     * @return void
+     */
     public function close()
     {
         if (is_resource($this->_resource)) {
